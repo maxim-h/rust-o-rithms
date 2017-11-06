@@ -1,0 +1,6 @@
+[package]
+name = "fibonacci_last_digit"
+version = "0.1.0"
+authors = ["Maxim Holmatov <maksim.holmatov@gmail.com>"]
+
+[dependencies]
