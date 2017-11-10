@@ -18,6 +18,20 @@ pub fn make_slots(n: usize) -> Vec<(u32, u32)>{
     return res;
 }
 
+macro_rules! parse_line {
+    ($($t: ty),+) => ({
+        let mut a_str = String::new();
+        stdin().read_line(&mut a_str).expect("read error");
+        let mut a_iter = a_str.split_whitespace();
+        (
+            $(
+            a_iter.next().unwrap().parse::<$t>().expect("parse error"),
+            )+
+        )
+    })
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -49,12 +63,14 @@ fn main() {
         .expect("Didn't read, lol");
     let n: usize =  n.trim().parse()
         .expect("Couldn't parse, lol");
-    /*
-    for i in 0..n {
-        println!("{}!", i);
+
+    let mut slots: Vec<(u32, u32)> = Vec::new();
+
+    for _ in 0..n {
+        slots.push(parse_line!(u32, u32));
     }
-    */
-    let mut slots: Vec<(u32, u32)> = make_slots(n);
+
+    //let mut slots: Vec<(u32, u32)> = make_slots(n);
     slots.sort_unstable_by_key(|k| k.0);
 
     let mut dots: Vec<&u32> = Vec::new();
@@ -65,15 +81,21 @@ fn main() {
             let p= &slots[i].0;
             dots.push(p);
         };
-        if (i != slots.len()-1) && (&slots[i].1 > &slots[i+1].0) {
-            skip = true;
-        } else if &slots[i+1].1 > &max {
-            skip = false;
-        } else {
-            skip = true;
-            max = &slots[i+1].1
-        };
+        if i < slots.len()-1 {
+            if &slots[i].1 > &slots[i+1].0 {
+                skip = true;
+            } else if &slots[i+1].1 > &max {
+                skip = false;
+            } else {
+                skip = true;
+                max = &slots[i+1].1
+            };
+        }
+
     }
-    println!("{:?}", dots);
+    println!("{:?}", dots.len());
+    for i in dots {
+        println!("{:?}", i);
+    }
 
 }
