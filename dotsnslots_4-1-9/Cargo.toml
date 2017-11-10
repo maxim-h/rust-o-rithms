@@ -1,0 +1,7 @@
+[package]
+name = "dotsnslots_4-1-9"
+version = "0.1.0"
+authors = ["maxim-h <maksim.holmatov@gmail.com>"]
+
+[dependencies]
+rand = "0.3"
