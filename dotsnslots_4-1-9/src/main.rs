@@ -1,10 +1,9 @@
-extern crate rand;
 extern crate itertools;
+extern crate rand;
 
 use std::io::stdin;
 use rand::distributions::{IndependentSample, Range}; //for testing
 use itertools::Itertools; //to display Vec since i can't impl Display to it
-
 
 pub fn make_slots(n: usize) -> Vec<(u32, u32)> {
     let mut rng = rand::thread_rng();
@@ -21,7 +20,6 @@ pub fn make_slots(n: usize) -> Vec<(u32, u32)> {
     }
     return res;
 }
-
 
 macro_rules! parse_line {
     ($($t: ty),+) => ({
@@ -58,12 +56,11 @@ mod tests {
 }
 
 fn main() {
-   
     let mut n: String = String::new();
 
     stdin().read_line(&mut n).expect("Didn't read, lol");
     let n: usize = n.trim().parse().expect("Couldn't parse, lol");
-    
+
     /*
     let mut slots: Vec<(u32, u32)> = Vec::new();
 
@@ -92,7 +89,7 @@ fn main() {
                 skip = false;
             };
         }
-    };
+    }
     println!("{:?}", dots.len());
     println!("{}", dots.iter().join(" "));
 }
