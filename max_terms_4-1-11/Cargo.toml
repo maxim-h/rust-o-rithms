@@ -5,3 +5,4 @@ authors = ["maxim-h <maksim.holmatov@gmail.com>"]
 
 [dependencies]
 itertools = "0.7.3"
+rand = "0.3"

@@ -1,7 +1,32 @@
 extern crate itertools;
+extern crate rand;
+
+use rand::distributions::{IndependentSample, Range};
+
 
 use std::io::stdin;
 use itertools::Itertools;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_random_inputs() {
+        let mut rng = rand::thread_rng();
+        let range: Range<i32> = Range::new(0, 1000_000_000);
+        for _ in 0..10000 {
+            let n = range.ind_sample(&mut rng);
+            let (_, terms) = max_terms(n);
+            let sum: i32 = terms.iter().sum();
+            assert_eq!(sum, n);
+        }
+    }
+
+
+}
+
+
 
 
 fn max_terms(k: i32) -> (i32, Vec<i32>){
