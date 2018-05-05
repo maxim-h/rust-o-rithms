@@ -1,9 +1,11 @@
 extern crate itertools;
 extern crate rand;
+extern crate rayon;
 
 use rand::distributions::{IndependentSample, Range};
-
-
+// IndependentSample is needed to load ind_sample trait for Range<T> struct, so ignore the warning
+use rayon::prelude::*;
+// used rayon to try test functions in parallel
 use std::io::stdin;
 use itertools::Itertools;
 
@@ -13,18 +15,23 @@ mod tests {
 
     #[test]
     fn test_random_inputs() {
-        let mut rng = rand::thread_rng();
-        let range: Range<i32> = Range::new(0, 1000_000_000);
-        for _ in 0..10000 {
+        fn create_and_assert() -> i32 {
+            let mut rng = rand::thread_rng();
+            let range: Range<i32> = Range::new(0, 1000_000_000);
             let n = range.ind_sample(&mut rng);
             let (_, terms) = max_terms(n);
             let sum: i32 = terms.iter().sum();
             assert_eq!(sum, n);
+            return 1
         }
+        let size = [0; 10000]; //hacky
+        let sum: i32 = size.par_iter()
+                           .map(| _i | create_and_assert())
+                           .sum();
+        assert_eq!(sum, 10000);
     }
-
-
 }
+
 
 
 
