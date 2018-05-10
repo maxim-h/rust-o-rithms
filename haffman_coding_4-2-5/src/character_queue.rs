@@ -1,10 +1,11 @@
-use std::collections::HashMap;
 
+use std::collections::HashMap;
+use binary_tree::Node;
 
 #[derive(Debug)]
 pub struct ObjectInQueue<T> {
-    obj: T,
-    priority: u32,
+    pub obj: T,
+    pub priority: u32,
 }
 
 
@@ -31,14 +32,18 @@ impl<T> PriorityQueue<T> {
     }
 
     pub fn extract_min(&mut self) -> ObjectInQueue<T> {
-        let ind: usize = self.q.iter().enumerate().min_by_key(|&x| x.1.priority).unwrap().0;
+        let ind: usize = self.q.iter().enumerate().min_by_key(|&x| x.1.priority).expect("Using extract_min on an empty PriorityQueue").0;
         self.q.remove(ind)
+    }
+
+    pub fn len(&self) -> usize{
+        self.q.len()
     }
 }
 
 
-pub trait FromString {
-    fn from_string<'a>(s: &'a String) -> PriorityQueue<char>;
+pub trait FromString<T> {
+    fn from_string<'a>(s: &'a String) -> PriorityQueue<T>;
 }
 
 
@@ -51,7 +56,7 @@ fn char_frequency(s: &String) -> HashMap<char, u32> {
 }
 
 
-impl FromString for PriorityQueue<char> {
+/*impl FromString for PriorityQueue<char> {
     fn from_string<'a>(s: &'a String) -> PriorityQueue<char> {
         let mut queue: PriorityQueue<char> = PriorityQueue::new();
         let f = char_frequency(s);
@@ -60,14 +65,17 @@ impl FromString for PriorityQueue<char> {
         }
         queue
     }
-}
+}*/
 
-    pub fn from_string<'a>(s: &'a String) -> PriorityQueue<char> {
-        let mut queue: PriorityQueue<char> = PriorityQueue::new();
+
+impl FromString<Box<Node>> for PriorityQueue<Box<Node>> {
+    fn from_string<'a>(s: &'a String) -> PriorityQueue<Box<Node>> {
+        let mut queue: PriorityQueue<Box<Node>> = PriorityQueue::new();
         let f = char_frequency(s);
         for (ch, fr) in f {
-            queue.insert(ch, fr);
+            queue.insert(Node::new(Option::from(ch), Option::from(fr), Option::from(None), Option::from(None)), fr)
         }
         queue
     }
+}
 

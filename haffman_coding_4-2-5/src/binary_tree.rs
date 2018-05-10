@@ -1,15 +1,13 @@
 use std::boxed::Box;
 /// Simple binary tree implementation
-///TODO: implement traits:
-///                       .remove
-///
-///
+/// As of right now only Node is implemented.
+/// Struct character_queue::PriorityQueue serves as the tree itself
 #[derive(Debug)]
 pub struct Node {
-    ch: Option<char>,
-    freq: u32,
-    l_0: Option<Box<Node>>,
-    r_1: Option<Box<Node>>,
+    pub ch: Option<char>,
+    pub freq: u32,
+    pub l_0: Option<Box<Node>>,
+    pub r_1: Option<Box<Node>>,
 }
 
 
@@ -64,5 +62,9 @@ impl Node {
         }
     }
 }
+
+
+
+
 
 
