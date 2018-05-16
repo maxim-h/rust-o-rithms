@@ -1,6 +1,7 @@
 
 use std::collections::HashMap;
 use binary_tree::Node;
+use std::ops::Index;
 
 #[derive(Debug)]
 pub struct ObjectInQueue<T> {
@@ -32,7 +33,10 @@ impl<T> PriorityQueue<T> {
     }
 
     pub fn extract_min(&mut self) -> ObjectInQueue<T> {
-        let ind: usize = self.q.iter().enumerate().min_by_key(|&x| x.1.priority).expect("Using extract_min on an empty PriorityQueue").0;
+        let ind: usize = self.q.iter()
+            .enumerate()
+            .min_by_key(|&x| x.1.priority)
+            .expect("Using extract_min on an empty PriorityQueue").0;
         self.q.remove(ind)
     }
 
@@ -41,6 +45,15 @@ impl<T> PriorityQueue<T> {
     }
 }
 
+// To index PriorityQueue directly
+// Note that it returns the `obj: T` itself instead of ObjectInQueue<T>
+impl<T> Index<usize> for PriorityQueue<T> {
+    type Output = T;
+
+    fn index(&self, ind: usize) -> &T {
+        &self.q[ind].obj
+    }
+}
 
 pub trait FromString<T> {
     fn from_string<'a>(s: &'a String) -> PriorityQueue<T>;
@@ -73,7 +86,11 @@ impl FromString<Box<Node>> for PriorityQueue<Box<Node>> {
         let mut queue: PriorityQueue<Box<Node>> = PriorityQueue::new();
         let f = char_frequency(s);
         for (ch, fr) in f {
-            queue.insert(Node::new(Option::from(ch), Option::from(fr), Option::from(None), Option::from(None)), fr)
+            queue.insert(Node::new(Option::from(ch),
+                                   Option::from(fr),
+                                   Option::from(None),
+                                   Option::from(None)),
+                         fr)
         }
         queue
     }

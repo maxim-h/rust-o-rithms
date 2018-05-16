@@ -2,7 +2,7 @@ use std::boxed::Box;
 /// Simple binary tree implementation
 /// As of right now only Node is implemented.
 /// Struct character_queue::PriorityQueue serves as the tree itself
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Node {
     pub ch: Option<char>,
     pub freq: u32,

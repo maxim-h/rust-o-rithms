@@ -60,10 +60,15 @@ fn main() {
         let j: ObjectInQueue<Box<Node>> = q.extract_min();
         let (j, pr_j) = (j.obj, j.priority);
 
-        q.insert(Node::new(Option::from(None), Option::from(None), Some(i), Some(j)), pr_i + pr_j);
+        q.insert(Node::new(Option::from(None), Option::from(None), Some(i),
+                           Some(j)), pr_i + pr_j);
     }
     // After this cycle root of my binary_tree will be the only element in the PriorityQueue
-    println!("{:?}", q.extract_min())
+
+    let c = q[0].clone();
+
+    println!("{:?}", q[0]);
+    println!("{:?}", c.r_1);
 
 
 }
