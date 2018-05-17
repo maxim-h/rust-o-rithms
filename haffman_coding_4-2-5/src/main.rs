@@ -8,11 +8,13 @@ pub mod character_queue;
 pub mod binary_tree;
 
 use std::io::stdin;
+use std::borrow::Borrow;
 //use std::collections::HashMap;
 use character_queue::PriorityQueue;
 use character_queue::ObjectInQueue;
 use character_queue::FromString;
 use binary_tree::Node;
+use binary_tree::encode_char;
 
 
 /*
@@ -51,6 +53,10 @@ fn main() {
     stdin().read_line(&mut s).expect("Didn't read, lol");
     let s: String = s.trim().parse().expect("Couldn't parse, lol");
 
+    let mut c: String = String::new();
+    stdin().read_line(&mut c).expect("Didn't read, lol");
+    let c: char = c.trim().parse().expect("Couldn't parse, lol");
+
     let mut q: PriorityQueue<Box<Node>> = PriorityQueue::from_string(&s);
 
 
@@ -65,10 +71,11 @@ fn main() {
     }
     // After this cycle root of my binary_tree will be the only element in the PriorityQueue
 
-    let c = q[0].clone();
+    let b = q[0].clone();
 
     println!("{:?}", q[0]);
-    println!("{:?}", c.r_1);
+    println!("{:?}", b.r_1);
+    println!("{:?}", encode_char(b.borrow(), c, String::new()).unwrap());
 
 
 }
