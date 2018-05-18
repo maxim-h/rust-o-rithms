@@ -1,19 +1,13 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-#![allow(unused_mut)]
-
 extern crate itertools;
+
+use std::io::stdin;
+use itertools::Itertools;
+use std::collections::HashMap;
+
 
 pub mod character_queue;
 pub mod binary_tree;
 
-use std::io::stdin;
-use std::borrow::Borrow;
-use itertools::Itertools;
-use std::collections::HashMap;
-
-//use std::collections::HashMap;
 use character_queue::PriorityQueue;
 use character_queue::ObjectInQueue;
 use character_queue::FromString;
@@ -21,50 +15,15 @@ use binary_tree::Node;
 use binary_tree::encode_char;
 
 
-/*
-fn char_code(n: Box<Node>, s: char, prefix: String) -> String{
-    //when used n should be the root of a Haffman tree
-    let n_char: char = match n.ch {
-        Some(c) => {},
-        None => "c",
-    };
-
-    if n_char == s {}
-}
-*/
-
-
-
-
-
 fn main() {
-    // TEST PriorityQueue
-/*    let mut s: String = String::new();
-    stdin().read_line(&mut s).expect("Didn't read, lol");
-    let s: String = s.trim().parse().expect("Couldn't parse, lol");
-
-    let mut q: PriorityQueue<char> = PriorityQueue::from_string(&s);
-
-    println!("{:?}", q.extract_min());*/
-    /* TEST binary_tree
-    let n1= Node::new(Option::from('f'), Option::from(3), Option::from(None), Option::from(None));
-    let n2= Node::new(Option::from('c'), Option::from(5), Option::from(None), Option::from(None));
-    let n3= Node::new(Option::from(None), Option::from(None), Some(n1), Some(n2));
-    print!("{:?}", n3)
-    */
-
+    //read string from stdin
     let mut s: String = String::new();
     stdin().read_line(&mut s).expect("Didn't read, lol");
     let s: String = s.trim().parse().expect("Couldn't parse, lol");
 
-    let mut c: String = String::new();
-    stdin().read_line(&mut c).expect("Didn't read, lol");
-    let c: char = c.trim().parse().expect("Couldn't parse, lol");
-
     let mut q: PriorityQueue<Box<Node>> = PriorityQueue::from_string(&s);
 
-
-    for k in q.len()+1..2*q.len() {
+    for _ in q.len()+1..2*q.len() {
         let i: ObjectInQueue<Box<Node>> = q.extract_min();
         let (i, pr_i) = (i.obj, i.priority);
         let j: ObjectInQueue<Box<Node>> = q.extract_min();
@@ -75,29 +34,40 @@ fn main() {
     }
     // After this cycle root of my binary_tree will be the only element in the PriorityQueue
 
-    let haffman_tree = q[0].clone();
+    //get a pointer to my haffman tree root
+    let haffman_tree: &Box<Node> = &q[0];
 
     let unique_chars: Vec<char> = s.chars().unique().collect();
 
+    //create encoder HashMap and reserve space for future entries
     let mut encoder: HashMap<char, String> = HashMap::new();
-    //encoder.reserve(unique_chars.len());
+    encoder.reserve(unique_chars.len());
 
-    for ch in unique_chars {
-        *encoder.entry(ch).or_insert(match encode_char(
-            &haffman_tree,
-            &ch,
+    //populate encoder
+    for ch in &unique_chars {
+        encoder.entry(*ch).or_insert(match encode_char(
+            haffman_tree,
+            *ch,
             String::new()
         ) {
             Some(code)=> code,
             None => panic!("Couldn't encode {}, you dumb fuck!", ch),
         }
         );
-    };
+    }
 
-    println!("{:?}", encoder);
- /*   println!("{:?}", q[0]);
-    println!("{:?}", b.r_1);
-    println!("{:?}", encode_char(b.borrow(), c, String::new()).unwrap());
-*/
+    let mut encoded_string: String = String::new();
 
+    for ch in s.chars() {
+        encoded_string.push_str(match encoder.get(&ch) {
+            Some(code) => code,
+            None => panic!("Couldn't get a code for {} from the encoder", ch),
+        });
+    }
+
+    println!("{} {}", unique_chars.len(), encoded_string.chars().count());
+    for (key, value) in encoder {
+        println!("{}: {}", key, value)
+    }
+    println!("{:?}", encoded_string);
 }

@@ -1,14 +1,13 @@
-
 use std::collections::HashMap;
 use binary_tree::Node;
 use std::ops::Index;
+
 
 #[derive(Debug)]
 pub struct ObjectInQueue<T> {
     pub obj: T,
     pub priority: u32,
 }
-
 
 impl<T> ObjectInQueue<T> {
     fn new(obj: T, priority: u32) -> ObjectInQueue<T>{
@@ -21,7 +20,6 @@ impl<T> ObjectInQueue<T> {
 pub struct PriorityQueue<T> {
     q: Vec<ObjectInQueue<T>>,
 }
-
 
 impl<T> PriorityQueue<T> {
     fn new() -> PriorityQueue<T> {
@@ -55,10 +53,10 @@ impl<T> Index<usize> for PriorityQueue<T> {
     }
 }
 
+
 pub trait FromString<T> {
     fn from_string<'a>(s: &'a String) -> PriorityQueue<T>;
 }
-
 
 fn char_frequency(s: &String) -> HashMap<char, u32> {
     let mut frequency: HashMap<char, u32> = HashMap::new();
@@ -67,19 +65,6 @@ fn char_frequency(s: &String) -> HashMap<char, u32> {
     }
     frequency
 }
-
-
-/*impl FromString for PriorityQueue<char> {
-    fn from_string<'a>(s: &'a String) -> PriorityQueue<char> {
-        let mut queue: PriorityQueue<char> = PriorityQueue::new();
-        let f = char_frequency(s);
-        for (ch, fr) in f {
-            queue.insert(ch, fr);
-        }
-        queue
-    }
-}*/
-
 
 impl FromString<Box<Node>> for PriorityQueue<Box<Node>> {
     fn from_string<'a>(s: &'a String) -> PriorityQueue<Box<Node>> {
@@ -95,4 +80,3 @@ impl FromString<Box<Node>> for PriorityQueue<Box<Node>> {
         queue
     }
 }
-

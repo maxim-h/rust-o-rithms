@@ -1,8 +1,5 @@
 use std::boxed::Box;
-use std::borrow::Borrow;
-/// Simple binary tree implementation
-/// As of right now only Node is implemented.
-/// Struct character_queue::PriorityQueue serves as the tree itself
+
 #[derive(Debug, Clone)]
 pub struct Node {
     pub ch: Option<char>,
@@ -19,8 +16,8 @@ impl Node {
     }
 
     pub fn new(c: Option<char>, f: Option<u32>, l: Option<Box<Node>>, r: Option<Box<Node>> ) -> Box<Node> {
-        let mut leaf = false;
-        let mut left= Box::new(Node {
+        let mut leaf: bool = false;
+        let mut left: Box<Node> = Box::new(Node {
             ch: None,
             freq: 0,
             l_0: None,
@@ -64,9 +61,9 @@ impl Node {
 }
 
 
-pub fn encode_char(n: &Node, c: &char, prefix: String) -> Option<String> {
+pub fn encode_char(n: &Node, c: char, prefix: String) -> Option<String> {
     if let Some(x) = n.ch {
-        if x == *c {
+        if x == c {
             return Some(prefix);
         } else {
             return None
@@ -82,7 +79,7 @@ pub fn encode_char(n: &Node, c: &char, prefix: String) -> Option<String> {
             },
             None => {panic!("Node has no left child and is not a leaf")},
         }
-        let pr = format!("{}1", prefix);
+        let pr: String = format!("{}1", prefix);
         match n.r_1{
             Some(ref nr) => {
                 match encode_char(nr, c, pr) {
@@ -94,6 +91,3 @@ pub fn encode_char(n: &Node, c: &char, prefix: String) -> Option<String> {
         }
     }
 }
-
-
-
