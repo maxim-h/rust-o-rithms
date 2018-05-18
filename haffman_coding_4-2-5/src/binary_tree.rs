@@ -64,7 +64,12 @@ impl Node {
 pub fn encode_char(n: &Node, c: char, prefix: String) -> Option<String> {
     if let Some(x) = n.ch {
         if x == c {
-            return Some(prefix);
+            if prefix == ""{
+                //in case root is the only node (e.g. string had only one unique character)
+                return Some(String::from("0"))
+            } else {
+                return Some(prefix)
+            }
         } else {
             return None
         }

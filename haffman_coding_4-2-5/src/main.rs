@@ -23,7 +23,7 @@ fn main() {
 
     let mut q: PriorityQueue<Box<Node>> = PriorityQueue::from_string(&s);
 
-    for _ in q.len()+1..2*q.len() {
+    for _ in q.len() + 1..2 * q.len() {
         let i: ObjectInQueue<Box<Node>> = q.extract_min();
         let (i, pr_i) = (i.obj, i.priority);
         let j: ObjectInQueue<Box<Node>> = q.extract_min();
@@ -39,7 +39,7 @@ fn main() {
 
     let unique_chars: Vec<char> = s.chars().unique().collect();
 
-    //create encoder HashMap and reserve space for future entries
+    //create encoder HashMap and reserve memory for future entries
     let mut encoder: HashMap<char, String> = HashMap::new();
     encoder.reserve(unique_chars.len());
 
