@@ -64,9 +64,9 @@ impl Node {
 }
 
 
-pub fn encode_char(n: &Node, c: char, prefix: String) -> Option<String> {
+pub fn encode_char(n: &Node, c: &char, prefix: String) -> Option<String> {
     if let Some(x) = n.ch {
-        if x == c {
+        if x == *c {
             return Some(prefix);
         } else {
             return None

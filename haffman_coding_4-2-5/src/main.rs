@@ -3,12 +3,16 @@
 #![allow(unused_variables)]
 #![allow(unused_mut)]
 
+extern crate itertools;
 
 pub mod character_queue;
 pub mod binary_tree;
 
 use std::io::stdin;
 use std::borrow::Borrow;
+use itertools::Itertools;
+use std::collections::HashMap;
+
 //use std::collections::HashMap;
 use character_queue::PriorityQueue;
 use character_queue::ObjectInQueue;
@@ -71,11 +75,29 @@ fn main() {
     }
     // After this cycle root of my binary_tree will be the only element in the PriorityQueue
 
-    let b = q[0].clone();
+    let haffman_tree = q[0].clone();
 
-    println!("{:?}", q[0]);
+    let unique_chars: Vec<char> = s.chars().unique().collect();
+
+    let mut encoder: HashMap<char, String> = HashMap::new();
+    //encoder.reserve(unique_chars.len());
+
+    for ch in unique_chars {
+        *encoder.entry(ch).or_insert(match encode_char(
+            &haffman_tree,
+            &ch,
+            String::new()
+        ) {
+            Some(code)=> code,
+            None => panic!("Couldn't encode {}, you dumb fuck!", ch),
+        }
+        );
+    };
+
+    println!("{:?}", encoder);
+ /*   println!("{:?}", q[0]);
     println!("{:?}", b.r_1);
     println!("{:?}", encode_char(b.borrow(), c, String::new()).unwrap());
-
+*/
 
 }
