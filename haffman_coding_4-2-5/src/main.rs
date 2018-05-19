@@ -4,7 +4,6 @@ use std::io::stdin;
 use itertools::Itertools;
 use std::collections::HashMap;
 
-
 pub mod character_queue;
 pub mod binary_tree;
 
@@ -13,7 +12,6 @@ use character_queue::ObjectInQueue;
 use character_queue::FromString;
 use binary_tree::Node;
 use binary_tree::encode_char;
-
 
 #[cfg(test)]
 mod tests {
@@ -24,12 +22,8 @@ mod tests {
     use self::rayon::prelude::*;
     use super::*;
 
-
     fn random_string(len: usize) -> String {
-        let rstr: String = rand::thread_rng()
-            .gen_iter::<char>()
-            .take(len)
-            .collect();
+        let rstr: String = rand::thread_rng().gen_iter::<char>().take(len).collect();
         rstr
     }
 
@@ -38,26 +32,24 @@ mod tests {
         let range: Range<u32> = Range::new(1, 10000);
         let mut test_string = random_string(range.ind_sample(&mut rng) as usize);
 
-        let encoder = make_encoder(&test_string,
-                                   haffman_tree(&test_string));
+        let encoder = make_encoder(&test_string, haffman_tree(&test_string));
 
         let decoder = make_decoder(&encoder);
 
-        assert_eq!(test_string, decode_string(encode_string(&test_string, &encoder),
-                                              decoder));
+        assert_eq!(
+            test_string,
+            decode_string(encode_string(&test_string, &encoder), decoder)
+        );
         1
     }
 
     #[test]
     fn decode_encoded_test() {
-        let size = [0; 100]; //hacky
-        let sum: i32 = size.par_iter()
-                           .map(| _i | decode_encoded())
-                           .sum();
-        assert_eq!(sum, 100);
+        let size = [0; 10]; //hacky
+        let sum: i32 = size.par_iter().map(|_i| decode_encoded()).sum();
+        assert_eq!(sum, 10);
     }
 }
-
 
 fn haffman_tree(s: &String) -> Box<Node> {
     let mut q: PriorityQueue<Box<Node>> = PriorityQueue::from_string(s);
@@ -68,15 +60,16 @@ fn haffman_tree(s: &String) -> Box<Node> {
         let j: ObjectInQueue<Box<Node>> = q.extract_min();
         let (j, pr_j) = (j.obj, j.priority);
 
-        q.insert(Node::new(Option::from(None), Option::from(None), Some(i),
-                           Some(j)), pr_i + pr_j);
+        q.insert(
+            Node::new(Option::from(None), Option::from(None), Some(i), Some(j)),
+            pr_i + pr_j,
+        );
     }
     // After this cycle root of my binary_tree will be the only element in the PriorityQueue
 
     //get a pointer to my haffman tree root
     q[0].clone()
 }
-
 
 fn make_encoder(s: &String, haff_tree: Box<Node>) -> HashMap<char, String> {
     let unique_chars: Vec<char> = s.chars().unique().collect();
@@ -87,19 +80,15 @@ fn make_encoder(s: &String, haff_tree: Box<Node>) -> HashMap<char, String> {
 
     //populate encoder
     for ch in &unique_chars {
-        encoder.entry(*ch).or_insert(match encode_char(
-            &haff_tree,
-            *ch,
-            String::new()
-        ) {
-            Some(code)=> code,
-            None => panic!("Couldn't encode {}, you dumb fuck!", ch),
-        }
-        );
+        encoder
+            .entry(*ch)
+            .or_insert(match encode_char(&haff_tree, *ch, String::new()) {
+                Some(code) => code,
+                None => panic!("Couldn't encode {}, you dumb fuck!", ch),
+            });
     }
     encoder
 }
-
 
 fn encode_string(s: &String, encoder: &HashMap<char, String>) -> String {
     let mut encoded_string: String = String::new();
@@ -121,7 +110,6 @@ fn make_decoder(encoder: &HashMap<char, String>) -> HashMap<String, char> {
     decoder
 }
 
-
 fn decode_string(encoded: String, decoder: HashMap<String, char>) -> String {
     let mut decoded: String = String::new();
     let mut prefix: String = String::new();
@@ -136,7 +124,6 @@ fn decode_string(encoded: String, decoder: HashMap<String, char>) -> String {
     decoded
 }
 
-
 fn main() {
     //read string from stdin
     let mut s: String = String::new();
@@ -149,11 +136,13 @@ fn main() {
 
     let unique_chars: Vec<char> = s.chars().unique().collect();
 
-
     println!("{} {}", unique_chars.len(), encoded_string.chars().count());
     for (key, value) in &encoder {
         println!("{}: {}", key, value)
     }
     println!("{:?}", encoded_string);
-    println!("{:?}", decode_string(encoded_string, make_decoder(&encoder)));
+    println!(
+        "{:?}",
+        decode_string(encoded_string, make_decoder(&encoder))
+    );
 }

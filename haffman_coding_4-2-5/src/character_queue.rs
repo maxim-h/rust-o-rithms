@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use binary_tree::Node;
 use std::ops::Index;
 
-
 #[derive(Debug)]
 pub struct ObjectInQueue<T> {
     pub obj: T,
@@ -10,11 +9,10 @@ pub struct ObjectInQueue<T> {
 }
 
 impl<T> ObjectInQueue<T> {
-    fn new(obj: T, priority: u32) -> ObjectInQueue<T>{
-        ObjectInQueue { obj, priority}
+    fn new(obj: T, priority: u32) -> ObjectInQueue<T> {
+        ObjectInQueue { obj, priority }
     }
 }
-
 
 #[derive(Debug)]
 pub struct PriorityQueue<T> {
@@ -23,7 +21,7 @@ pub struct PriorityQueue<T> {
 
 impl<T> PriorityQueue<T> {
     fn new() -> PriorityQueue<T> {
-        PriorityQueue { q: Vec::new()}
+        PriorityQueue { q: Vec::new() }
     }
 
     pub fn insert<'a>(&'a mut self, value: T, priority: u32) {
@@ -31,14 +29,16 @@ impl<T> PriorityQueue<T> {
     }
 
     pub fn extract_min(&mut self) -> ObjectInQueue<T> {
-        let ind: usize = self.q.iter()
+        let ind: usize = self.q
+            .iter()
             .enumerate()
             .min_by_key(|&x| x.1.priority)
-            .expect("Using extract_min on an empty PriorityQueue").0;
+            .expect("Using extract_min on an empty PriorityQueue")
+            .0;
         self.q.remove(ind)
     }
 
-    pub fn len(&self) -> usize{
+    pub fn len(&self) -> usize {
         self.q.len()
     }
 }
@@ -52,7 +52,6 @@ impl<T> Index<usize> for PriorityQueue<T> {
         &self.q[ind].obj
     }
 }
-
 
 pub trait FromString<T> {
     fn from_string<'a>(s: &'a String) -> PriorityQueue<T>;
@@ -71,11 +70,15 @@ impl FromString<Box<Node>> for PriorityQueue<Box<Node>> {
         let mut queue: PriorityQueue<Box<Node>> = PriorityQueue::new();
         let f = char_frequency(s);
         for (ch, fr) in f {
-            queue.insert(Node::new(Option::from(ch),
-                                   Option::from(fr),
-                                   Option::from(None),
-                                   Option::from(None)),
-                         fr)
+            queue.insert(
+                Node::new(
+                    Option::from(ch),
+                    Option::from(fr),
+                    Option::from(None),
+                    Option::from(None),
+                ),
+                fr,
+            )
         }
         queue
     }
